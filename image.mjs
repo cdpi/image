@@ -40,20 +40,30 @@ async function pixelate(url, pixelSize)
 	{
 	let image = await loadImage(url);
 
-	let pixels = getPixels(image);
-
-	let columns = Math.floor(image.width / pixelSize);
 	let rows = Math.floor(image.height / pixelSize);
+	let columns = Math.floor(image.width / pixelSize);
+
+	let pixels = getPixels(image);
 
 	for (let row = 0; row < rows; row++)
 		{
-		for (let column = 0; column < column; column++)
+		let offsetY = row * pixelSize * image.width * 4;
+
+		for (let column = 0; column < columns; column++)
 			{
-			//let offset = row * (image.width * 4) + column * 4;
-			//let red = pixels.data[offset];
-			//let green = pixels.data[offset + 1];
-			//let blue = pixels.data[offset + 2];
-			//console.debug(`${red}, ${green}, ${blue}`);
+			let offsetX = column * pixelSize * 4;
+
+			for (let y = 0; y < pixelSize; y++)
+				{
+				for (let x = 0; x < pixelSize; x++)
+					{
+					//let red = pixels.data[offset];
+					//let green = pixels.data[offset + 1];
+					//let blue = pixels.data[offset + 2];
+					}
+				}
+
+			//console.debug(`${row},${column}; ${offsetX},${offsetY}; ${offset} = ${red}, ${green}, ${blue}`);
 			}
 		}
 	}
