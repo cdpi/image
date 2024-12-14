@@ -29,8 +29,13 @@ crisp-edges
 
 <img style="width: 40%; height: auto; image-rendering: pixelated;" src="temp/plage.jpg">
 
+<img id="apod" style="width: 40%; height: auto;" src="">
+
 <script type="module">
 
+//import { download } from "./apod.mjs";
+//import { astronomyPictureOfTheDay } from "./nasa.mjs";
+//import { loadImage, getPixels, pixelate } from "./image.mjs";
 import { pixelate } from "./image.mjs";
 import { arrayToTable } from "./html.mjs";
 
@@ -48,6 +53,22 @@ pixelate("temp/plage.jpg", 150).then(pixels =>
 	{
 	document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background));
 	});
+
+/*
+astronomyPictureOfTheDay().then(async url =>
+	{
+	let image = await loadImage(url);
+
+	let img = document.querySelector("#apod");
+
+	img.src = url;
+
+	// Uncaught (in promise) DOMException: The operation is insecure.
+	let pixels = getPixels(img);
+
+	//pixelate(img, 100).then(pixels => { document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background)) });
+	});
+*/
 
 </script>
 
