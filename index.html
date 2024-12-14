@@ -3,14 +3,51 @@
 <head>
 <meta charset="UTF-8">
 	<title>Pixelate</title>
+<style>
+
+table
+	{
+	border-collapse: collapse;
+	}
+
+td
+	{
+	border: 1px solid silver;
+	padding: .5em 1em;
+	}
+
+</style>
 </head>
 <body>
+
+<img style="width: 40%; height: auto; image-rendering: pixelated;" src="image2.png">
+<!--
+<img style="transform: scale(50);" src="image2.png">
+image-rendering: pixelated;
+crisp-edges
+-->
+
+<img style="width: 40%; height: auto; image-rendering: pixelated;" src="temp/plage.jpg">
 
 <script type="module">
 
 import { pixelate } from "./image.mjs";
+import { arrayToTable } from "./html.mjs";
 
-pixelate("image.png", 3);
+function background(color)
+	{
+	return ` style="background-color: rgb(${color[0]}, ${color[1]}, ${color[2]});"`;
+	}
+
+pixelate("image2.png", 3).then(pixels =>
+	{
+	document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background));
+	});
+
+pixelate("temp/plage.jpg", 150).then(pixels =>
+	{
+	document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background));
+	});
 
 </script>
 
