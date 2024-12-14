@@ -1,6 +1,8 @@
 
 /**
  * @param {String} url
+ * 
+ * @returns {Promise}
  */
 async function loadImage(url)
 	{
@@ -17,34 +19,36 @@ async function loadImage(url)
 	}
 
 /**
- * @param {HTMLImageElement} image
+ * @param {HTMLImageElement | SVGImageElement | HTMLCanvasElement | HTMLVideoElement | OffscreenCanvas | ImageBitmap | VideoFrame} image
+ * 
+ * @returns {Uint8ClampedArray<ArrayBufferLike>}
  */
 function getPixels(image)
 	{
 	let canvas = document.createElement("canvas");
 
-	canvas.width = image.width;
-	canvas.height = image.height;
+	canvas.width = image.naturalWidth;
+	canvas.height = image.naturalHeight;
 
 	let context = canvas.getContext("2d");
 
 	context.drawImage(image, 0, 0);
 
-	return context.getImageData(0, 0, image.width, image.height).data;
+	return context.getImageData(0, 0, image.naturalWidth, image.naturalHeight).data;
 	}
 
 /**
- * @param {String} url
+ * @param {HTMLImageElement} image
  * @param {Number} pixelSize
+ * 
+ * @returns {Array<Array<Array<Number>>>}
  */
-async function pixelate(url, pixelSize)
+async function pixelate(image, pixelSize)
 	{
-	let image = await loadImage(url);
+	let rows = Math.floor(image.naturalHeight / pixelSize);
+	let columns = Math.floor(image.naturalWidth / pixelSize);
 
-	let rows = Math.floor(image.height / pixelSize);
-	let columns = Math.floor(image.width / pixelSize);
-
-	let RW = image.width * 4;
+	let RW = image.naturalWidth * 4;
 	let PX = pixelSize * pixelSize;
 
 	let result = new Array();

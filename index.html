@@ -4,71 +4,43 @@
 <meta charset="UTF-8">
 	<title>Pixelate</title>
 <style>
-
-table
-	{
-	border-collapse: collapse;
-	}
-
-td
-	{
-	border: 1px solid silver;
-	padding: .5em 1em;
-	}
-
+table{border-collapse: collapse;margin-bottom: 2em;}
+td{border: 1px solid silver;padding: .5em 1em;}
 </style>
 </head>
 <body>
 
-<img style="width: 40%; height: auto; image-rendering: pixelated;" src="image2.png">
-<!--
-<img style="transform: scale(50);" src="image2.png">
-image-rendering: pixelated;
-crisp-edges
--->
-
-<img style="width: 40%; height: auto; image-rendering: pixelated;" src="temp/plage.jpg">
-
-<img id="apod" style="width: 40%; height: auto;" src="">
+<img id="image" style="width: 500px; height: auto; image-rendering: pixelated;" src="images/image.png">
+<img style="width: 500px; height: auto; image-rendering: pixelated;" src="images/image2.png">
 
 <script type="module">
 
-//import { download } from "./apod.mjs";
-//import { astronomyPictureOfTheDay } from "./nasa.mjs";
-//import { loadImage, getPixels, pixelate } from "./image.mjs";
-import { pixelate } from "./image.mjs";
-import { arrayToTable } from "./html.mjs";
+import { loadImage, pixelate } from "./image.mjs";
 
-function background(color)
+function showPixels(pixels)
 	{
-	return ` style="background-color: rgb(${color[0]}, ${color[1]}, ${color[2]});"`;
+	let rows = pixels.map(row =>
+		{
+		let cells = row.map(pixel => `<td style="background-color: rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]});">${pixel}</td>`).join("");
+
+		return `<tr>${cells}</tr>`;
+		});
+
+	return `<table>${rows.join("\n")}</table>`;
 	}
 
-pixelate("image2.png", 3).then(pixels =>
+document.querySelector("#image").onload = e =>
 	{
-	document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background));
-	});
+	pixelate(e.target, 3).then(pixels =>
+		{
+		e.target.insertAdjacentHTML("afterend", showPixels(pixels));
+		});
+	};
 
-pixelate("temp/plage.jpg", 150).then(pixels =>
+pixelate(await loadImage("images/image2.png"), 3).then(pixels =>
 	{
-	document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background));
+	document.body.insertAdjacentHTML("beforeend", showPixels(pixels));
 	});
-
-/*
-astronomyPictureOfTheDay().then(async url =>
-	{
-	let image = await loadImage(url);
-
-	let img = document.querySelector("#apod");
-
-	img.src = url;
-
-	// Uncaught (in promise) DOMException: The operation is insecure.
-	let pixels = getPixels(img);
-
-	//pixelate(img, 100).then(pixels => { document.body.insertAdjacentHTML("beforeend", arrayToTable(pixels, background)) });
-	});
-*/
 
 </script>
 
